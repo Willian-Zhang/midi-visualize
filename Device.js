@@ -38,10 +38,19 @@ export class Piano extends EventEmitter2{
         if(this.no_device_alert){
             swal.close();
         }
-    
+        
+        let self = this;
         device.onmidimessage = function(message){
-            console.log(message.data);
-            // 144 128
+            switch (message.data[0]) {
+                case 144:
+                    self.emit('press', message.data[1]);
+                    break;
+                case 128:
+                    self.emit('release', message.data[1]);
+                    break;
+                default:
+                    break;
+            }
         }
         
     }
