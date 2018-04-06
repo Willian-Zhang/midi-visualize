@@ -1,4 +1,5 @@
 import './libraries/eventemitter2.js';
+// import './libraries/heap.js';
 
 export class Piano extends EventEmitter2{
     constructor(win, speed_dectection_duration = 5000){
@@ -21,7 +22,7 @@ export class Piano extends EventEmitter2{
             access.onstatechange = (e) => {
                 // Print information about the (dis)connected MIDI controller
                 if(e.port instanceof MIDIInput && e.port.state == 'connected'){
-                    this.deviceConnected(e.port)
+                    this.deviceConnected(e.port);
                 }
                 if(e.port.state == 'disconnected'){
                     if([...access.inputs.values()].length == 0){
@@ -46,12 +47,13 @@ export class Piano extends EventEmitter2{
             let key = message.data[1];
             switch (message.data[0]) {
                 case 144:
-                    this.emit('press', key);
                     this.pressing.add(key);
+                    this.emit('key.press', key);
+                    
                     break;
                 case 128:
-                    this.emit('release', key);
                     this.pressing.delete(key);
+                    this.emit('key.release', key);
                     break;
                 default:
                     break;
@@ -69,7 +71,27 @@ export class Piano extends EventEmitter2{
             }, timeout);
             this.emit('speed', this.speed);
         }
-        this.on('press', increment);
-        this.on('release', increment);
+        this.on('key.press', increment);
+        this.on('key.release', increment);
+    }
+    detectPitch(){
+        let calculate_pitch = ()=>{
+            if(this.pressing.size >= 5){
+                let heap = [];
+                let wantSize = this.pressing.size - 3;
+                this.pressing.forEach(v => Heap.push(heap, v));
+
+                // console.log("size", this.pressing.size);
+                // console.log("nlargest", Heap.nlargest(heap, wantSize));
+                this.emit('pitch-right', average(Heap.nlargest(heap, wantSize)));
+            }else if(this.pressing.size > 0){
+                this.emit('pitch-right', Math.max(...this.pressing));
+            }
+            // console.log(this.pressing.size);
+        };
+        this.on('key.press', calculate_pitch);
+        this.on('key.release', calculate_pitch);
     }
 }
+
+const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
