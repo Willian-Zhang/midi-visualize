@@ -3,8 +3,8 @@ import {Board} from './Arduino.js';
 import {Keybaord} from './Keyboard.js';
 
 
-// let board = new Board();
-// board.connect({baudrate: 9600});
+let board = new Board();
+board.connect({baudrate: 9600});
 
 let piano = new Piano(window);
 let keyboard = new Keybaord();
@@ -14,13 +14,13 @@ piano.detectSpeed();
 piano.detectPitch();
 piano.on('speed', (speed) =>{
     console.log(`speed`, `s${speed/1.5+1}\n`);
-    // board.write(`s${speed/1.5+1}\n`);
+    board.write(`s${speed/1.5+1}\n`);
 });
 piano.on('pitch-right', pitch => {
     let angle = 180-(pitch-36)*180/(96-36);
     // console.log(`pitch`, pitch);
     console.log(`angle`, angle);
-    // board.write(`a${angle}\n`);
+    board.write(`a${angle}\n`);
 })
 
 // board.on('line', line => {
