@@ -43,21 +43,22 @@ export class Piano extends EventEmitter2{
             swal.close();
         }
         
-        device.onmidimessage = (message) => {
-            let key = message.data[1];
-            switch (message.data[0]) {
-                case 144:
-                    this.pressing.add(key);
-                    this.emit('key.press', key);
-                    
-                    break;
-                case 128:
-                    this.pressing.delete(key);
-                    this.emit('key.release', key);
-                    break;
-                default:
-                    break;
-            }
+        device.onmidimessage = this.onmidimessage.bind(this);
+    }
+    onmidimessage(message){
+        let key = message.data[1];
+        switch (message.data[0]) {
+            case 144:
+                this.pressing.add(key);
+                this.emit('key.press', key);
+                
+                break;
+            case 128:
+                this.pressing.delete(key);
+                this.emit('key.release', key);
+                break;
+            default:
+                break;
         }
     }
     detectSpeed(speed_dectection_duration = null){

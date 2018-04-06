@@ -24,11 +24,24 @@ export class Board extends EventEmitter2{
                 throw new Error('Mutiple ports found:'+string(filtered));
             }
         }); 
-        // this.serial.on('data', this.processData.bind(this));
+        this.serial.on('data', this.processData.bind(this));
         
         // I don't know why but this runs for deault 
         // this.list(); 
     }
+    processData(){
+        
+        let code = this.serial.read();
+        if(code==10){
+            let buffer = this.buffer;
+            this.buffer = [];
+            this.emit('line', buffer);
+        }else{
+            this.buffer.push(code);
+        }
+    }
+
+
     write(any){
         this.serial.write(any);
     }
