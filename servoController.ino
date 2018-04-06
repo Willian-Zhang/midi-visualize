@@ -21,21 +21,34 @@ void loop() {
   
   if(Serial.available() != 0){
         inString = Serial.readString();
-        char flag = inString.charAt(0);
-        if(flag == 'a'){ 
-          int angle = inString.substring(1).toInt();
-          if(angle >= 0 && angle <= 180){
-            myservo2.write(angle);
+        for(int i = 0; i < inString.length(); i++){
+          char temp = inString.charAt(i);
+          if(temp == 'a'){
+            String ang = "";
+            int j = i + 1;
+            while(j < inString.length() && inString.charAt(j) != '\n'){
+              ang = ang + inString.charAt(j);
+              j++;
+            }
+            int angle = ang.toInt();
+            if(angle >= 0 && angle <= 180){
+              myservo2.write(angle);
+            }
+          }else if(temp == 's'){
+            String spe = "";
+            int j = i + 1;
+            while(j < inString.length() && inString.charAt(j) != '\n'){
+              spe = spe + inString.charAt(j);
+              j++;
+            }
+            int speed = spe.toInt();
+            if(speed >= 0 && speed <= 100){
+              val = 0.0002 * speed;
+            }
           }
-          
-        }else if(flag == 's'){
-          int speed = inString.substring(1).toInt();
-          Serial.println(speed);
-          if(speed >= 0 && speed <= 100){
-            val = 0.0001 * speed;
-          }
-        }    
+        }
     }
+
 
     if(flag){
       pos += val;
@@ -50,4 +63,7 @@ void loop() {
     }
 
     myservo1.write(pos);
+
+    
 }
+    
