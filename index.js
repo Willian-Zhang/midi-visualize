@@ -24,9 +24,10 @@ piano.on('pitch-right', pitch => {
     board.write(`a${angle}\n`);
 })
 
-// board.on('line', line => {
-//     console.log(`line`, String.fromCharCode(...line))
-// })
+board.on('line', line => {
+    console.log(`line`, String.fromCharCode(...line))
+});
+
 var enum_i=36;
 const keyboardToPiano = {
     // left
