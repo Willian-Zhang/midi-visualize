@@ -5,7 +5,7 @@
 Servo myservo1;  // create servo object to control a servo
 Servo myservo2;  // create servo object to control a servo
 
-int pos = 0;    
+float pos = 0;    
 float val = 0.001;
 String inString = "";
 bool flag = true;
@@ -30,6 +30,7 @@ void loop() {
           
         }else if(flag == 's'){
           int speed = inString.substring(1).toInt();
+          Serial.println(speed);
           if(speed >= 0 && speed <= 100){
             val = 0.0001 * speed;
           }
@@ -48,10 +49,6 @@ void loop() {
         flag = !flag; 
       }
     }
-    myservo1.write(pos);
 
-    
+    myservo1.write(pos); 
 }
-    
-
-
