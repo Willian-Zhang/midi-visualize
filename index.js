@@ -13,8 +13,9 @@ piano.connect();
 piano.detectSpeed();
 piano.detectPitch();
 piano.on('speed', (speed) =>{
-    console.log(`speed`, `s${speed/1.5+1}\n`);
-    board.write(`s${speed/1.5+1}\n`);
+    let s = speed/1.5+1;
+    console.log(`speed`, s);
+    board.write(`s${s}\n`);
 });
 piano.on('pitch-right', pitch => {
     let angle = 180-(pitch-36)*180/(96-36);
